@@ -18,12 +18,13 @@ class Article(AbstractModel):
     tags = models.ManyToManyField('webapp.Tag', related_name='articles', blank=True)
     author = models.ForeignKey(get_user_model(), on_delete=models.SET_DEFAULT,
                                default=1, related_name="articles", verbose_name="Автор")
+    likes = models.ManyToManyField(get_user_model(), related_name='likes_articles')
 
     def __str__(self):
         return f"{self.pk} {self.title}: {self.author}"
 
     def get_absolute_url(self):
-        return reverse("webapp:article_view", kwargs={"pk": self.pk})  # article/5/
+        return reverse("webapp:article_view", kwargs={"pk": self.pk})
 
     class Meta:
         db_table = "articles"
@@ -55,25 +56,3 @@ class Tag(AbstractModel):
         db_table = "tags"
         verbose_name = "Тег"
         verbose_name_plural = "Теги"
-
-
-class ArticleLike(models.Model):
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='likes')
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='article_likes')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = "articlelikes"
-        verbose_name = "ЛайкСтат"
-        verbose_name_plural = "ЛайкиСтат"
-
-
-class CommentLike(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='likes')
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='comment_likes')
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        db_table = "commentlikes"
-        verbose_name = "ЛайкКом"
-        verbose_name_plural = "ЛайкиКом"
