@@ -113,12 +113,9 @@ class UserChangeView(PermissionRequiredMixin, UpdateView):
 
 
 class UserPasswordChangeView(PasswordChangeView):
-
     template_name = 'user_password_change.html'
 
     def get_success_url(self):
         return reverse('accounts:profile', kwargs={'pk': self.request.user.pk})
 
-
-
-
+# P.S. не понимаю почему подсвечивает  def form_invalid(self, form, profile_form):
